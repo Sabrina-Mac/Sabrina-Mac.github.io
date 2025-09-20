@@ -198,376 +198,383 @@
   const clickSound = document.getElementById("click-sound");
   const popSound = document.getElementById("pop-sound");
   const bgMusic = document.getElementById("bg-music");
+  
   if (bgMusic) bgMusic.volume = 0.2;
 
-const cat = document.getElementById("cat");
-const confettiContainer = document.getElementById("confetti-container");
+  // Configurações do som de hover
+  if (hoverSound) {
+    hoverSound.volume = 0.25;      // Define o volume para 25% (diminuição de 75%)
+    hoverSound.playbackRate = 1.5; // Deixa 50% mais rápido
+  }
+  
+  const cat = document.getElementById("cat");
+  const confettiContainer = document.getElementById("confetti-container");
 
-let current = 0;
-let chosenAnswers = [];
-let audioUnlocked = false;
+  let current = 0;
+  let chosenAnswers = [];
+  let audioUnlocked = false;
 
-const questions = [
-  { 
-    text: "Qual dessas comidas você prefere?", 
-    options: ["Pizza 🍕","Sorvete 🍨","Hambúrguer 🍔"], 
-    responses: { 
-      "Pizza 🍕":"Pizza! Bom demais dividir com você!", 
-      "Sorvete 🍨":"Sorvete? Deixa que eu te pago uma casquinha!", 
-      "Hambúrguer 🍔":"Hum, hambúrguer... espero que venha com batata!" 
+  const questions = [
+    { 
+      text: "Qual dessas comidas você prefere?", 
+      options: ["Pizza 🍕","Sorvete 🍨","Hambúrguer 🍔"], 
+      responses: { 
+        "Pizza 🍕":"Pizza! Bom demais dividir com você!", 
+        "Sorvete 🍨":"Sorvete? Deixa que eu te pago uma casquinha!", 
+        "Hambúrguer 🍔":"Hum, hambúrguer... espero que venha com batata!" 
+      },
+      images: {
+        "Pizza 🍕":"img/1.png",
+        "Sorvete 🍨":"img/3.png",
+        "Hambúrguer 🍔":"img/12.png"
+      }
     },
-    images: {
-      "Pizza 🍕":"img/1.png",
-      "Sorvete 🍨":"img/3.png",
-      "Hambúrguer 🍔":"img/12.png"
+    { 
+      text: "Qual desses lugares você escolheria pra um date?", 
+      options: ["Cinema 🎬","Parque 🌳","Cafeteria ☕"], 
+      responses: { 
+        "Cinema 🎬":"Cinema? Bom que é escurinho heh...", 
+        "Parque 🌳":"Parque? Deitar na grama juntos parece ótimo!", 
+        "Cafeteria ☕":"Cafeteria? Eu fico com o último pedaço de bolo!" 
+      },
+      images: {
+        "Cinema 🎬":"img/2.png",
+        "Parque 🌳":"img/8.png",
+        "Cafeteria ☕":"img/11.png"
+      }
+    },
+    { 
+      text: "Se tivesse que escolher um animal fofinho agora, seria...", 
+      options: ["Gatinho 🐱","Cachorrinho 🐶","Coelhinho 🐰"], 
+      responses: { 
+        "Gatinho 🐱":"Gatinho! Igualzinho a você: fofo e manhosinho!", 
+        "Cachorrinho 🐶":"Doguinho fofo? Igual ao seu jeito carinhoso e carismático!", 
+        "Coelhinho 🐰":"Coelhinho? Ownn, combina com sua fofura!" 
+      },
+      images: {
+        "Gatinho 🐱":"img/3.png",
+        "Cachorrinho 🐶":"img/7.png",
+        "Coelhinho 🐰":"img/1.png"
+      }
+    },
+    { 
+      text: "Qual joguinho você quer testar comigo?", 
+      options: ["Stardew Valley 🌱","Phasmophobia 👻","Outro 🎮"], 
+      responses: { 
+        "Stardew Valley 🌱":"Stardew? Vamos plantar juntos e casar na fazenda!", 
+        "Phasmophobia 👻":"Phasmo? Só se você segurar minha mão no escuro!", 
+        "Outro 🎮":"Uuuh, aceito qualquer joguinho contigo!" 
+      },
+      images: {
+        "Stardew Valley 🌱":"img/4.png",
+        "Phasmophobia 👻":"img/5.png",
+        "Outro 🎮":"img/6.png"
+      }
+    },
+    { 
+      text: "Se fosse escolher uma música pra gente ouvir agora, seria...", 
+      options: ["Romântica 💕","Divertida 🎶","Relaxante 🌙"], 
+      responses: { 
+        "Romântica 💕":"Romântica? Olha que eu puxo um anel e te declaro meu! (cuidado🤓)", 
+        "Divertida 🎶":"Divertida? Vamos dançar juntos até cansar!", 
+        "Relaxante 🌙":"Relaxante? Ótima pra relaxarmos enquanto batemos papo!" 
+      },
+      images: {
+        "Romântica 💕":"img/7.png",
+        "Divertida 🎶":"img/8.png",
+        "Relaxante 🌙":"img/9.png"
+      }
+    },
+    { 
+      text: "Qual sobremesa combina mais com a gente?", 
+      options: ["Bolo 🍰","Brigadeiro 🍫","Pudim 🍮"], 
+      responses: { 
+        "Bolo 🍰":"Bolo? Te faço um bolão de cenoura!", 
+        "Brigadeiro 🍫":"Tinham dois docinhos na mesa, o brigadeiro e o beijinho. O brigadeiro rolou, mas e o beijinho? Rola?", 
+        "Pudim 🍮":"Pudim? Doce igual a ti!" 
+      },
+      images: {
+        "Bolo 🍰":"img/3.png",
+        "Brigadeiro 🍫":"img/2.png",
+        "Pudim 🍮":"img/7.png"
+      }
+    },
+    { 
+      text: "Se você pudesse me dar um apelido, qual seria?", 
+      options: ["Fofo 🥰","Brincalhão 😆","Carinhoso 💖"], 
+      responses: { 
+        "Fofo 🥰":"Fofo? Para que eu sou timidokkkkk", 
+        "Brincalhão 😆":"Brincalhão? Só não vale autista, viu?", 
+        "Carinhoso 💖":"Carinhoso? Hmmm, só não vai me desconfigurar de novo, hein?" 
+      },
+      images: {
+        "Fofo 🥰":"img/15.png",
+        "Brincalhão 😆":"img/14.png",
+        "Carinhoso 💖":"img/7.png"
+      }
+    },
+    { 
+      text: "Se pudéssemos viajar juntos, pra onde iria?", 
+      options: ["Pra praia 🏖️","Pra montanha 🏔️","Pra cidade grande 🌆"], 
+      responses: { 
+        "Pra praia 🏖️":"Pra praia? Vou te empurrar na água, hein?", 
+        "Pra montanha 🏔️":"Montanha? A gente sobe e respira juntos o ar puro!", 
+        "Pra cidade grande 🌆":"Cidade grande? Tudo bem, te mostro muitos lugares bacanas!" 
+      },
+      images: {
+        "Pra praia 🏖️":"img/1.png",
+        "Pra montanha 🏔️":"img/8.png",
+        "Pra cidade grande 🌆":"img/1.png"
+      }
+    },
+    { 
+      text: "Qual dessas atividades você preferiria fazer comigo?", 
+      options: ["Maratona de filmes 🎥","Cozinhar juntos 🍳","Jogar videogame 🎮"], 
+      responses: { 
+        "Maratona de filmes 🎥":"Filmes? Só não vale reclamar dos meus comentários!", 
+        "Cozinhar juntos 🍳":"Cozinhar? Espero que não queimemos nada...", 
+        "Jogar videogame 🎮":"Videogame? Com todo respeito, mas te destruo no x1!" 
+      },
+      images: {
+        "Maratona de filmes 🎥":"img/12.png",
+        "Cozinhar juntos 🍳":"img/15.png",
+        "Jogar videogame 🎮":"img/13.png"
+      }
+    },
+    { 
+      text: "Qual emoji descreve melhor nossa dinâmica juntos?", 
+      options: ["💜💛","😂🥰","🌙✨"], 
+      responses: { 
+        "💜💛":"💜💛 perfeito! Colorido e leve!", 
+        "😂🥰":"😂🥰 De fato... Sempre rimos e ficamos baitolinhos!", 
+        "🌙✨":"🌙✨ místico e mágico, como nossa conexão assustadora!" 
+      },
+      images: {
+        "💜💛":"img/3.png",
+        "😂🥰":"img/7.png",
+        "🌙✨":"img/8.png"
+      }
+    },
+    { 
+      text: "O que mais te faz sorrir quando estamos juntos?", 
+      options: ["Piadas bobas 😆","Coincidências até de mais 😲","Flertes escancarados e cara-de-pau😉"], 
+      responses: { 
+        "Piadas bobas 😆":"Haha, eu adoro te fazer rir! Sua felicidade ilumina meu dia! 😄", 
+        "Coincidências até de mais 😲":"Coincidências até de mais? De fato, isso é tão maluco que me faz pensar na real existência de almas gêmeas", 
+        "Flertes escancarados e cara-de-pau😉":"Flertes? Bom, posso passar o dia todo te elogiando e demonstrando meu interesse!" 
+      },
+      images: {
+        "Piadas bobas 😆":"img/7.png",
+        "Coincidências até de mais 😲":"img/12.png",
+        "Flertes escancarados e cara-de-pau😉":"img/9.png"
+      }
+    },
+    { 
+      text: "Qual dessas coisinhas bobas você mais gosta?", 
+      options: ["Fazer caretas 😜","Inventar apelidos engraçados 🤪","Dançar sem música 💃"], 
+      responses: { 
+        "Fazer caretas 😜":"Caretas? Quero muito vê-las! 😆", 
+        "Inventar apelidos engraçados 🤪":"Apelidos bobos? Quero ouvir todos heh", 
+        "Dançar sem música 💃":"Dançar sem música? É o que mais faço! Vamos dançar juntos igual a dois bonecos de posto!!" 
+      },
+      images: {
+        "Fazer caretas 😜":"img/3.png",
+        "Inventar apelidos engraçados 🤪":"img/1.png",
+        "Dançar sem música 💃":"img/8.png"
+      }
+    },
+    { 
+      text: "Se eu contar uma piada ruim, qual sua reação?", 
+      options: ["Rir mesmo assim 😂","Revirar os olhos 🙄","Sem reação 😳"], 
+      responses: { 
+        "Rir mesmo assim 😂":"Haha, você é o melhor! Espero que minhas piadas horrorosas realmente te arranquem um sorriso!", 
+        "Revirar os olhos 🙄":"Revirar os olhos? Tudo bem, vou melhorar na próxima!! ", 
+        "Sem reação 😳":"Sem reação? Bom... Tu continua lindo da mesma forma haha!" 
+      },
+      images: {
+        "Rir mesmo assim 😂":"img/1.png",
+        "Revirar os olhos 🙄":"img/14.png",
+        "Sem reação 😳":"img/3.png"
+      }
+    },
+    { 
+      text: "Qual dessas coisas deixa seu dia mais feliz?", 
+      options: ["Surpresas criativas 💌","Memes engraçados 🤣","Café quentinho ☕"], 
+      responses: { 
+        "Surpresas criativas 💌":"Surpresas? Bom, posso fazer uma sempre que tu precisar sorrir! ", 
+        "Memes engraçados 🤣":"Memes? Pois tome cuidado, posso te lotar de memes!", 
+        "Café quentinho ☕":"Café? Melhor ainda se a gente tomar juntos e com uma cumbuquinha de farofa!" 
+      },
+      images: {
+        "Surpresas criativas 💌":"img/3.png",
+        "Memes engraçados 🤣":"img/12.png",
+        "Café quentinho ☕":"img/7.png"
+      }
+    },
+    { 
+      text: "Se fosse escolher uma atividade boba agora, seria...", 
+      options: ["Brincar de mímica 🎭","Desenhar bobagens 🎨","Fazer caretas no espelho 🤪"], 
+      responses: { 
+        "Brincar de mímica 🎭":"Mímica? Vou adivinhar tudo e rir da sua derrota!", 
+        "Desenhar bobagens 🎨":"Desenho? Quero ver suas criações inesperadas!", 
+        "Fazer caretas no espelho 🤪":"Caretas? Vamos competir pra ver quem é mais bobo! (Tu vai perder miseravelmente)" 
+      },
+      images: {
+        "Brincar de mímica 🎭":"img/2.png",
+        "Desenhar bobagens 🎨":"img/3.png",
+        "Fazer caretas no espelho 🤪":"img/9.png"
+      }
     }
-  },
-  { 
-    text: "Qual desses lugares você escolheria pra um date?", 
-    options: ["Cinema 🎬","Parque 🌳","Cafeteria ☕"], 
-    responses: { 
-      "Cinema 🎬":"Cinema? Bom que é escurinho heh...", 
-      "Parque 🌳":"Parque? Deitar na grama juntos parece ótimo!", 
-      "Cafeteria ☕":"Cafeteria? Eu fico com o último pedaço de bolo!" 
-    },
-    images: {
-      "Cinema 🎬":"img/2.png",
-      "Parque 🌳":"img/8.png",
-      "Cafeteria ☕":"img/11.png"
-    }
-  },
-  { 
-    text: "Se tivesse que escolher um animal fofinho agora, seria...", 
-    options: ["Gatinho 🐱","Cachorrinho 🐶","Coelhinho 🐰"], 
-    responses: { 
-      "Gatinho 🐱":"Gatinho! Igualzinho a você: fofo e manhosinho!", 
-      "Cachorrinho 🐶":"Doguinho fofo? Igual ao seu jeito carinhoso e carismático!", 
-      "Coelhinho 🐰":"Coelhinho? Ownn, combina com sua fofura!" 
-    },
-    images: {
-      "Gatinho 🐱":"img/3.png",
-      "Cachorrinho 🐶":"img/7.png",
-      "Coelhinho 🐰":"img/1.png"
-    }
-  },
-  { 
-    text: "Qual joguinho você quer testar comigo?", 
-    options: ["Stardew Valley 🌱","Phasmophobia 👻","Outro 🎮"], 
-    responses: { 
-      "Stardew Valley 🌱":"Stardew? Vamos plantar juntos e casar na fazenda!", 
-      "Phasmophobia 👻":"Phasmo? Só se você segurar minha mão no escuro!", 
-      "Outro 🎮":"Uuuh, aceito qualquer joguinho contigo!" 
-    },
-    images: {
-      "Stardew Valley 🌱":"img/4.png",
-      "Phasmophobia 👻":"img/5.png",
-      "Outro 🎮":"img/6.png"
-    }
-  },
-  { 
-    text: "Se fosse escolher uma música pra gente ouvir agora, seria...", 
-    options: ["Romântica 💕","Divertida 🎶","Relaxante 🌙"], 
-    responses: { 
-      "Romântica 💕":"Romântica? Olha que eu puxo um anel e te declaro meu! (cuidado🤓)", 
-      "Divertida 🎶":"Divertida? Vamos dançar juntos até cansar!", 
-      "Relaxante 🌙":"Relaxante? Ótima pra relaxarmos enquanto batemos papo!" 
-    },
-    images: {
-      "Romântica 💕":"img/7.png",
-      "Divertida 🎶":"img/8.png",
-      "Relaxante 🌙":"img/9.png"
-    }
-  },
-  { 
-    text: "Qual sobremesa combina mais com a gente?", 
-    options: ["Bolo 🍰","Brigadeiro 🍫","Pudim 🍮"], 
-    responses: { 
-      "Bolo 🍰":"Bolo? Te faço um bolão de cenoura!", 
-      "Brigadeiro 🍫":"Tinham dois docinhos na mesa, o brigadeiro e o beijinho. O brigadeiro rolou, mas e o beijinho? Rola?", 
-      "Pudim 🍮":"Pudim? Doce igual a ti!" 
-    },
-    images: {
-      "Bolo 🍰":"img/3.png",
-      "Brigadeiro 🍫":"img/2.png",
-      "Pudim 🍮":"img/7.png"
-    }
-  },
-  { 
-    text: "Se você pudesse me dar um apelido, qual seria?", 
-    options: ["Fofo 🥰","Brincalhão 😆","Carinhoso 💖"], 
-    responses: { 
-      "Fofo 🥰":"Fofo? Para que eu sou timidokkkkk", 
-      "Brincalhão 😆":"Brincalhão? Só não vale autista, viu?", 
-      "Carinhoso 💖":"Carinhoso? Hmmm, só não vai me desconfigurar de novo, hein?" 
-    },
-    images: {
-      "Fofo 🥰":"img/15.png",
-      "Brincalhão 😆":"img/14.png",
-      "Carinhoso 💖":"img/7.png"
-    }
-  },
-  { 
-    text: "Se pudéssemos viajar juntos, pra onde iria?", 
-    options: ["Pra praia 🏖️","Pra montanha 🏔️","Pra cidade grande 🌆"], 
-    responses: { 
-      "Pra praia 🏖️":"Pra praia? Vou te empurrar na água, hein?", 
-      "Pra montanha 🏔️":"Montanha? A gente sobe e respira juntos o ar puro!", 
-      "Pra cidade grande 🌆":"Cidade grande? Tudo bem, te mostro muitos lugares bacanas!" 
-    },
-    images: {
-      "Pra praia 🏖️":"img/1.png",
-      "Pra montanha 🏔️":"img/8.png",
-      "Pra cidade grande 🌆":"img/1.png"
-    }
-  },
-  { 
-    text: "Qual dessas atividades você preferiria fazer comigo?", 
-    options: ["Maratona de filmes 🎥","Cozinhar juntos 🍳","Jogar videogame 🎮"], 
-    responses: { 
-      "Maratona de filmes 🎥":"Filmes? Só não vale reclamar dos meus comentários!", 
-      "Cozinhar juntos 🍳":"Cozinhar? Espero que não queimemos nada...", 
-      "Jogar videogame 🎮":"Videogame? Com todo respeito, mas te destruo no x1!" 
-    },
-    images: {
-      "Maratona de filmes 🎥":"img/12.png",
-      "Cozinhar juntos 🍳":"img/15.png",
-      "Jogar videogame 🎮":"img/13.png"
-    }
-  },
-  { 
-    text: "Qual emoji descreve melhor nossa dinâmica juntos?", 
-    options: ["💜💛","😂🥰","🌙✨"], 
-    responses: { 
-      "💜💛":"💜💛 perfeito! Colorido e leve!", 
-      "😂🥰":"😂🥰 De fato... Sempre rimos e ficamos baitolinhos!", 
-      "🌙✨":"🌙✨ místico e mágico, como nossa conexão assustadora!" 
-    },
-    images: {
-      "💜💛":"img/3.png",
-      "😂🥰":"img/7.png",
-      "🌙✨":"img/8.png"
-    }
-  },
-  { 
-    text: "O que mais te faz sorrir quando estamos juntos?", 
-    options: ["Piadas bobas 😆","Coincidências até de mais 😲","Flertes escancarados e cara-de-pau😉"], 
-    responses: { 
-      "Piadas bobas 😆":"Haha, eu adoro te fazer rir! Sua felicidade ilumina meu dia! 😄", 
-      "Coincidências até de mais 😲":"Coincidências até de mais? De fato, isso é tão maluco que me faz pensar na real existência de almas gêmeas", 
-      "Flertes escancarados e cara-de-pau😉":"Flertes? Bom, posso passar o dia todo te elogiando e demonstrando meu interesse!" 
-    },
-    images: {
-      "Piadas bobas 😆":"img/7.png",
-      "Coincidências até de mais 😲":"img/12.png",
-      "Flertes escancarados e cara-de-pau😉":"img/9.png"
-    }
-  },
-  { 
-    text: "Qual dessas coisinhas bobas você mais gosta?", 
-    options: ["Fazer caretas 😜","Inventar apelidos engraçados 🤪","Dançar sem música 💃"], 
-    responses: { 
-      "Fazer caretas 😜":"Caretas? Quero muito vê-las! 😆", 
-      "Inventar apelidos engraçados 🤪":"Apelidos bobos? Quero ouvir todos heh", 
-      "Dançar sem música 💃":"Dançar sem música? É o que mais faço! Vamos dançar juntos igual a dois bonecos de posto!!" 
-    },
-    images: {
-      "Fazer caretas 😜":"img/3.png",
-      "Inventar apelidos engraçados 🤪":"img/1.png",
-      "Dançar sem música 💃":"img/8.png"
-    }
-  },
-  { 
-    text: "Se eu contar uma piada ruim, qual sua reação?", 
-    options: ["Rir mesmo assim 😂","Revirar os olhos 🙄","Sem reação 😳"], 
-    responses: { 
-      "Rir mesmo assim 😂":"Haha, você é o melhor! Espero que minhas piadas horrorosas realmente te arranquem um sorriso!", 
-      "Revirar os olhos 🙄":"Revirar os olhos? Tudo bem, vou melhorar na próxima!! ", 
-      "Sem reação 😳":"Sem reação? Bom... Tu continua lindo da mesma forma haha!" 
-    },
-    images: {
-      "Rir mesmo assim 😂":"img/1.png",
-      "Revirar os olhos 🙄":"img/14.png",
-      "Sem reação 😳":"img/3.png"
-    }
-  },
-  { 
-    text: "Qual dessas coisas deixa seu dia mais feliz?", 
-    options: ["Surpresas criativas 💌","Memes engraçados 🤣","Café quentinho ☕"], 
-    responses: { 
-      "Surpresas criativas 💌":"Surpresas? Bom, posso fazer uma sempre que tu precisar sorrir! ", 
-      "Memes engraçados 🤣":"Memes? Pois tome cuidado, posso te lotar de memes!", 
-      "Café quentinho ☕":"Café? Melhor ainda se a gente tomar juntos e com uma cumbuquinha de farofa!" 
-    },
-    images: {
-      "Surpresas criativas 💌":"img/3.png",
-      "Memes engraçados 🤣":"img/12.png",
-      "Café quentinho ☕":"img/7.png"
-    }
-  },
-  { 
-    text: "Se fosse escolher uma atividade boba agora, seria...", 
-    options: ["Brincar de mímica 🎭","Desenhar bobagens 🎨","Fazer caretas no espelho 🤪"], 
-    responses: { 
-      "Brincar de mímica 🎭":"Mímica? Vou adivinhar tudo e rir da sua derrota!", 
-      "Desenhar bobagens 🎨":"Desenho? Quero ver suas criações inesperadas!", 
-      "Fazer caretas no espelho 🤪":"Caretas? Vamos competir pra ver quem é mais bobo! (Tu vai perder miseravelmente)" 
-    },
-    images: {
-      "Brincar de mímica 🎭":"img/2.png",
-      "Desenhar bobagens 🎨":"img/3.png",
-      "Fazer caretas no espelho 🤪":"img/9.png"
+  ];
+
+  function showQuestion() {
+    if(current < questions.length){
+      document.getElementById("question-text").textContent = questions[current].text;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      document.getElementById("character").style.display = "none";
+      document.getElementById("response").textContent = "";
+
+      for(let option of questions[current].options){
+        const btn = document.createElement("button");
+        btn.textContent = option;
+
+        btn.addEventListener("mouseover", () => {
+          if (hoverSound) { 
+              hoverSound.currentTime = 0; 
+              hoverSound.play(); 
+          }
+          if (cat) {
+            cat.style.display = "block";
+            const rect = btn.getBoundingClientRect();
+            cat.style.left = rect.left + window.scrollX + rect.width/2 - 30 + "px";
+            cat.style.top = rect.top + window.scrollY - 70 + "px";
+            cat.style.opacity = 1;
+            setTimeout(()=>{cat.style.opacity=0; cat.style.display="none";},700);
+          }
+        });
+
+        btn.onclick = () => { 
+          if (!audioUnlocked && bgMusic) {
+            bgMusic.play().catch(e => console.log("Música de fundo não pôde ser iniciada."));
+            audioUnlocked = true;
+          }
+
+          if(clickSound) {
+            clickSound.currentTime = 0;
+            clickSound.play();
+          } 
+          showResponse(option); 
+        }
+        optionsDiv.appendChild(btn);
+      }
+      
+    } else {
+      const finalDiv = document.getElementById("final");
+      document.getElementById("quiz").style.display = "none";
+      finalDiv.style.display = "block";
+      
+      setTimeout(()=>{ finalDiv.style.opacity = 1; }, 50);
+
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = "<strong>💜 Suas respostas fofas 💛</strong><br><br>";
+      chosenAnswers.forEach((answer, index)=>{
+        answersDiv.innerHTML += `👉 <em>${questions[index].text}</em> <br> Você respondeu: <strong>${answer}</strong><br><br>`;
+      });
+
+      if (!document.querySelector(".copy-btn")) {
+          const copyBtn = document.createElement("button");
+          copyBtn.className = "copy-btn";
+          copyBtn.textContent = "📋 Copiar gabarito";
+          copyBtn.onclick = () => {
+              const gabaritoText = chosenAnswers.map((r,i)=>`${i+1}. ${questions[index].text} → ${r}`).join("\n");
+              navigator.clipboard.writeText(gabaritoText).then(() => {
+                  alert("Gabarito copiado! Agora você pode me enviar 😉");
+              });
+          };
+          answersDiv.appendChild(copyBtn);
+      }
     }
   }
-];
 
-function showQuestion() {
-  if(current < questions.length){
-    document.getElementById("question-text").textContent = questions[current].text;
+  function showResponse(option){
+    const resp = questions[current].responses[option];
+    document.getElementById("response").textContent = resp;
+
+    const character = document.getElementById("character");
+    const imgSrc = questions[current].images[option];
+    
+    if(imgSrc){
+      character.style.opacity = 0;
+      setTimeout(() => {
+          character.src = imgSrc;
+          character.style.display = "block";
+          setTimeout(()=>{ character.style.opacity = 1; }, 50);
+      }, 100);
+    } else { 
+      character.style.display = "none"; 
+    }
+
+    chosenAnswers.push(option);
+
     const optionsDiv = document.getElementById("options");
     optionsDiv.innerHTML = "";
 
-    document.getElementById("character").style.display = "none";
-    document.getElementById("response").textContent = "";
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Próxima ➡️";
+    nextBtn.className = "restart-btn";
+    nextBtn.style.background = "#FFC0CB";
+    nextBtn.style.border = "2px solid #FFB6C1";
+    
+    nextBtn.onclick = () => { 
+        current++; 
+        showQuestion(); 
+    };
 
-    for(let option of questions[current].options){
-      const btn = document.createElement("button");
-      btn.textContent = option;
+    optionsDiv.appendChild(nextBtn);
+  }
 
-      btn.addEventListener("mouseover", () => {
-        if (hoverSound) { 
-            hoverSound.currentTime = 0; 
-            hoverSound.play(); 
-        }
-        if (cat) {
-          cat.style.display = "block";
-          const rect = btn.getBoundingClientRect();
-          cat.style.left = rect.left + window.scrollX + rect.width/2 - 30 + "px";
-          cat.style.top = rect.top + window.scrollY - 70 + "px";
-          cat.style.opacity = 1;
-          setTimeout(()=>{cat.style.opacity=0; cat.style.display="none";},700);
+  const finalText = document.getElementById("final-text");
+  if (finalText) {
+      finalText.addEventListener("mouseover", () => {
+        if(popSound) popSound.play();
+        for(let i=0;i<20;i++){
+          const confetto = document.createElement("div");
+          confetto.className="confetto";
+          confetto.style.background=`hsl(${Math.random()*360},70%,60%)`;
+          confetto.style.left=finalText.offsetLeft + Math.random()*finalText.offsetWidth + "px";
+          confetto.style.top=finalText.offsetTop + Math.random()*finalText.offsetHeight + "px";
+          confettiContainer.appendChild(confetto);
+
+          let speed = 2 + Math.random()*3;
+          let opacityDecay = 0.02 + Math.random()*0.03;
+
+          const fall = setInterval(()=>{
+            const top=parseFloat(confetto.style.top);
+            confetto.style.top = top + speed + "px";
+            confetto.style.opacity -= opacityDecay;
+            if(top > window.innerHeight || confetto.style.opacity <= 0){
+              if (confetto.parentNode === confettiContainer) {
+                  confettiContainer.removeChild(confetto);
+              }
+              clearInterval(fall);
+            }
+          }, 16);
         }
       });
-
-      btn.onclick = () => { 
-        if (!audioUnlocked && bgMusic) {
-          bgMusic.play().catch(e => console.log("Música de fundo não pôde ser iniciada."));
-          audioUnlocked = true;
-        }
-
-        if(clickSound) {
-          clickSound.currentTime = 0;
-          clickSound.play();
-        } 
-        showResponse(option); 
-      }
-      optionsDiv.appendChild(btn);
-    }
-    
-  } else {
-    const finalDiv = document.getElementById("final");
-    document.getElementById("quiz").style.display = "none";
-    finalDiv.style.display = "block";
-    
-    setTimeout(()=>{ finalDiv.style.opacity = 1; }, 50);
-
-    const answersDiv = document.getElementById("answers");
-    answersDiv.innerHTML = "<strong>💜 Suas respostas fofas 💛</strong><br><br>";
-    chosenAnswers.forEach((answer, index)=>{
-      answersDiv.innerHTML += `👉 <em>${questions[index].text}</em> <br> Você respondeu: <strong>${answer}</strong><br><br>`;
-    });
-
-    if (!document.querySelector(".copy-btn")) {
-        const copyBtn = document.createElement("button");
-        copyBtn.className = "copy-btn";
-        copyBtn.textContent = "📋 Copiar gabarito";
-        copyBtn.onclick = () => {
-            const gabaritoText = chosenAnswers.map((r,i)=>`${i+1}. ${questions[index].text} → ${r}`).join("\n");
-            navigator.clipboard.writeText(gabaritoText).then(() => {
-                alert("Gabarito copiado! Agora você pode me enviar 😉");
-            });
-        };
-        answersDiv.appendChild(copyBtn);
-    }
-  }
-}
-
-function showResponse(option){
-  const resp = questions[current].responses[option];
-  document.getElementById("response").textContent = resp;
-
-  const character = document.getElementById("character");
-  const imgSrc = questions[current].images[option];
-  
-  if(imgSrc){
-    character.style.opacity = 0;
-    setTimeout(() => {
-        character.src = imgSrc;
-        character.style.display = "block";
-        setTimeout(()=>{ character.style.opacity = 1; }, 50);
-    }, 100);
-  } else { 
-    character.style.display = "none"; 
   }
 
-  chosenAnswers.push(option);
-
-  const optionsDiv = document.getElementById("options");
-  optionsDiv.innerHTML = "";
-
-  const nextBtn = document.createElement("button");
-  nextBtn.textContent = "Próxima ➡️";
-  nextBtn.className = "restart-btn";
-  nextBtn.style.background = "#FFC0CB";
-  nextBtn.style.border = "2px solid #FFB6C1";
-  
-  nextBtn.onclick = () => { 
-      current++; 
-      showQuestion(); 
+  document.getElementById("restart-btn").onclick = () => {
+    current = 0;
+    chosenAnswers = [];
+    document.getElementById("final").style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+    confettiContainer.innerHTML = "";
+    showQuestion();
   };
 
-  optionsDiv.appendChild(nextBtn);
-}
-
-const finalText = document.getElementById("final-text");
-if (finalText) {
-    finalText.addEventListener("mouseover", () => {
-      if(popSound) popSound.play();
-      for(let i=0;i<20;i++){
-        const confetto = document.createElement("div");
-        confetto.className="confetto";
-        confetto.style.background=`hsl(${Math.random()*360},70%,60%)`;
-        confetto.style.left=finalText.offsetLeft + Math.random()*finalText.offsetWidth + "px";
-        confetto.style.top=finalText.offsetTop + Math.random()*finalText.offsetHeight + "px";
-        confettiContainer.appendChild(confetto);
-
-        let speed = 2 + Math.random()*3;
-        let opacityDecay = 0.02 + Math.random()*0.03;
-
-        const fall = setInterval(()=>{
-          const top=parseFloat(confetto.style.top);
-          confetto.style.top = top + speed + "px";
-          confetto.style.opacity -= opacityDecay;
-          if(top > window.innerHeight || confetto.style.opacity <= 0){
-            if (confetto.parentNode === confettiContainer) {
-                confettiContainer.removeChild(confetto);
-            }
-            clearInterval(fall);
-          }
-        }, 16);
-      }
-    });
-}
-
-document.getElementById("restart-btn").onclick = () => {
-  current = 0;
-  chosenAnswers = [];
-  document.getElementById("final").style.display = "none";
-  document.getElementById("quiz").style.display = "block";
-  confettiContainer.innerHTML = "";
   showQuestion();
-};
-
-showQuestion();
 </script>
 
 </body>
