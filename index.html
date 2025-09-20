@@ -202,9 +202,14 @@
   if (bgMusic) bgMusic.volume = 0.2;
 
   // Configurações do som de hover
-  if (hoverSound) {
-    hoverSound.volume = 0.25;      // Define o volume para 25% (diminuição de 75%)
-    hoverSound.playbackRate = 1.5; // Deixa 50% mais rápido
+ if (hoverSound) {
+    hoverSound.volume = 0.25;      // Volume em 25%
+    hoverSound.playbackRate = 2.0; // O dobro da velocidade
+  }
+  
+  // Configurações do som de clique
+  if (clickSound) {
+    clickSound.playbackRate = 2.0; // O dobro da velocidade
   }
   
   const cat = document.getElementById("cat");
@@ -579,3 +584,4 @@
 
 </body>
 </html>
+
