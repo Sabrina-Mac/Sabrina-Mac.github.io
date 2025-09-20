@@ -177,13 +177,13 @@
   </div>
 </div>
 
-<video id="cat" width="60" autoplay muted loop playsinline>
+<video id="cat" width="60" autoplay muted loop playsinline preload="auto">
   <source src="img/gatinho.mp4" type="video/mp4">
 </video>
-<audio id="hover-sound" src="audio/hover.mp3"></audio>
-<audio id="click-sound" src="audio/click.mp3"></audio>
-<audio id="pop-sound" src="audio/pop.mp3"></audio>
-<audio id="bg-music" src="audio/musiquinha.mp3" loop></audio>
+<audio id="hover-sound" src="audio/hover.mp3" preload="auto"></audio>
+<audio id="click-sound" src="audio/click.mp3" preload="auto"></audio>
+<audio id="pop-sound" src="audio/pop.mp3" preload="auto"></audio>
+<audio id="bg-music" src="audio/musiquinha.mp3" loop preload="auto"></audio>
 
 
 <div id="confetti-container" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
@@ -205,6 +205,7 @@ const confettiContainer = document.getElementById("confetti-container");
 
 let current = 0;
 let chosenAnswers = [];
+let audioUnlocked = false;
 
 const questions = [
   { 
@@ -433,7 +434,10 @@ function showQuestion() {
       btn.textContent = option;
 
       btn.addEventListener("mouseover", () => {
-        if (hoverSound && !hoverSound.paused) { hoverSound.currentTime = 0; hoverSound.play(); }
+        if (hoverSound) { 
+            hoverSound.currentTime = 0; 
+            hoverSound.play(); 
+        }
         if (cat) {
           cat.style.display = "block";
           const rect = btn.getBoundingClientRect();
@@ -445,14 +449,20 @@ function showQuestion() {
       });
 
       btn.onclick = () => { 
-        if(clickSound) clickSound.play(); 
+        if (!audioUnlocked && bgMusic) {
+          bgMusic.play().catch(e => console.log("Música de fundo não pôde ser iniciada."));
+          audioUnlocked = true;
+        }
+
+        if(clickSound) {
+          clickSound.currentTime = 0;
+          clickSound.play();
+        } 
         showResponse(option); 
       }
       optionsDiv.appendChild(btn);
     }
     
-     if(current === 0 && bgMusic){ bgMusic.play().catch(e => console.log("Música de fundo bloqueada pelo navegador.")); }
-
   } else {
     const finalDiv = document.getElementById("final");
     document.getElementById("quiz").style.display = "none";
